@@ -1,0 +1,51 @@
+apiVersion: batch/v2alpha1
+kind: CronJob
+metadata:
+  labels:
+    cronjob: couchbase-backup-cronjob
+  name: couchbase-backup-cronjob
+  namespace: ngwsa-performance
+spec:
+  schedule: "*/15 * * * *"
+  concurrencyPolicy: Forbid
+  startingDeadlineSeconds: 30
+  suspend: false
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            cronjob: couchbase-backup-cronjob
+            app: couchbase-backup
+          annotations:
+            prometheus.io/scrape: "false"
+        spec:
+          restartPolicy: Never
+          containers:
+            - name: couchbase-backup
+              image: registry.localdomain:443/couchbase-backup:v0.1.0
+              command:
+                - "/opt/backup.sh"
+              env:
+                - name: COUCHBASE_HOST
+                  value: couchbase-svc
+                - name: COUCHBASE_BUCKET
+                  valueFrom:
+                    secretKeyRef:
+                      name: ngwsa-couchbase-secrets
+                      key: couchbase.bucket
+                - name: COUCHBASE_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: ngwsa-couchbase-secrets
+                      key: couchbase.password
+                - name: HTTP_PROXY
+                  valueFrom:
+                    secretKeyRef:
+                      name: http-proxy-secrets
+                      key: http-proxy
+                - name: HTTPS_PROXY
+                  valueFrom:
+                    secretKeyRef:
+                      name: http-proxy-secrets
+                      key: http-proxy

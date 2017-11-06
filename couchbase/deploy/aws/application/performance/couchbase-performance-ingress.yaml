@@ -1,0 +1,28 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: couchbase-ingress
+  labels:
+    app: couchbase-ui
+  annotations:
+    # TODO: couchbase auth
+    #ingress.kubernetes.io/auth-type: basic
+    #ingress.kubernetes.io/auth-secret: basic-auth
+    #ingress.kubernetes.io/auth-realm: "Authentication Required"
+    ingress.kubernetes.io/whitelist-source-range: "0.0.0.0/0"
+    ingress.kubernetes.io/upstream-fail-timeout: "30"
+    kubernetes.io/ingress.class: "nginx"
+  namespace: ngwsa-performance
+spec:
+  tls:
+    - hosts:
+        - performance.couchbase.kubernauts.de
+      secretName: couchbase-performance-certs
+  rules:
+    - host: performance.couchbase.kubernauts.de
+      http:
+        paths:
+        - path: /
+          backend:
+            serviceName: couchbase-ui-svc
+            servicePort: 80

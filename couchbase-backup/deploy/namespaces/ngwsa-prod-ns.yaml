@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ngwsa-production
+  labels:
+    app: ngwsa
+    stage: production

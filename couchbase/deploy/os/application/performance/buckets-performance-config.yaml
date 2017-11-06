@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: couchbase-bucket-config
+  labels:
+    app: couchbase
+  namespace: ngwsa-performance
+data:
+  test: "test"
+  test1: "test"
+  test2: "test"
+  test3: "test"

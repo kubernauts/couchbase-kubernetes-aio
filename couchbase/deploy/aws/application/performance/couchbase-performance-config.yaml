@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: couchbase-config
+  labels:
+    app: couchbase
+  namespace: ngwsa-performance
+data:
+  master: "couchbase-stateset-0"
+  autoRebalance: "false"
+  memoryQuota: "1200"
+  indexMemoryQuota: "256"
+  ftsMemoryQuota: "256"
+  storageMode: "memory_optimized"
+  services: "kv%2Cn1ql%2Cindex%2Cfts"
